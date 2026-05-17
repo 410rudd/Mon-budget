@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Budget 2025</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #141414;
+    --surface: #1c1c1c;
+    --surface2: #222222;
+    --surface3: #2a2a2a;
+    --border: #303030;
+    --text: #d4d0c8;
+    --muted: #6a6660;
+    --accent: #c8a97e;
+    --accent2: #7aaa8a;
+    --danger: #b06060;
+    --info: #6a8fa8;
+    --purple: #8a7aa0;
+    --orange: #b8855a;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 40px;
+    font-weight: 300;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'Lora', serif;
+    font-size: 1.4rem;
+    color: var(--accent);
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .logo span { color: var(--text); font-style: italic; }
+  .date-display {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  /* NAV TABS */
+  nav {
+    display: flex;
+    gap: 4px;
+    padding: 16px 24px 0;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  .tab {
+    padding: 9px 16px;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    font-size: 0.72rem;
+    font-weight: 400;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-bottom: none;
+    white-space: nowrap;
+    transition: all 0.15s;
+    color: var(--muted);
+    background: transparent;
+  }
+  .tab:hover { color: var(--text); background: var(--surface2); }
+  .tab.active {
+    background: var(--bg);
+    color: var(--accent);
+    border-color: var(--border);
+  }
+
+  /* PAGES */
+  .page { display: none; padding: 24px; max-width: 960px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* SECTION HEADER */
+  .section-title {
+    font-family: 'Lora', serif;
+    font-size: 1.3rem;
+    color: var(--text);
+    margin-bottom: 4px;
+    font-weight: 400;
+  }
+  .section-sub {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 24px;
+    font-weight: 300;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+  .card-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 400;
+  }
+  .card-title .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.63rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-weight: 400;
+  }
+  td {
+    padding: 10px 12px;
+    font-size: 0.82rem;
+    border-bottom: 1px solid rgba(48,48,48,0.6);
+    vertical-align: middle;
+    font-weight: 300;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+
+  /* INPUTS */
+  input, select {
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    padding: 8px 10px;
+    outline: none;
+    transition: border-color 0.15s;
+    font-weight: 300;
+  }
+  input:focus, select:focus { border-color: var(--accent); }
+  input[type="number"] { width: 90px; }
+  input[type="text"] { width: 160px; }
+
+  /* BUTTONS */
+  .btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-accent { background: var(--accent); color: #141414; }
+  .btn-accent:hover { opacity: 0.85; }
+  .btn-danger { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 6px 10px; font-size: 0.63rem; }
+  .btn-danger:hover { background: var(--danger); color: var(--bg); }
+  .btn-ghost { background: var(--surface3); color: var(--text); border: 1px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 0.65rem;
+    font-weight: 500;
+    font-family: 'Syne', sans-serif;
+  }
+  .badge-auto { background: rgba(126,184,245,0.15); color: var(--info); }
+  .badge-paypal { background: rgba(0,112,220,0.2); color: #5ba8f5; }
+  .badge-plaisir { background: rgba(245,149,74,0.15); color: var(--orange); }
+  .badge-voiture { background: rgba(180,126,245,0.15); color: var(--purple); }
+
+  /* AMOUNT */
+  .amount { font-weight: 500; }
+  .amount.neg { color: var(--danger); }
+  .amount.pos { color: var(--accent2); }
+  .amount.warn { color: var(--accent); }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  /* SUMMARY CARD */
+  .sum-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .sum-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.63rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-weight: 400;
+  }
+  .sum-value {
+    font-family: 'Lora', serif;
+    font-size: 1.7rem;
+    line-height: 1;
+    font-weight: 400;
+  }
+  .sum-value.neg { color: var(--danger); }
+  .sum-value.pos { color: var(--accent2); }
+  .sum-value.warn { color: var(--accent); }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    background: var(--surface3);
+    border-radius: 20px;
+    height: 12px;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+  .progress-bar {
+    height: 100%;
+    border-radius: 20px;
+    transition: width 0.6s cubic-bezier(.4,0,.2,1);
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .progress-pct {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    color: var(--text);
+    margin-top: 4px;
+    font-weight: 400;
+  }
+
+  /* EPARGNE BLOCK */
+  .epargne-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  /* DETTE */
+  .dette-bar-wrap {
+    background: var(--surface3);
+    border-radius: 20px;
+    height: 8px;
+    overflow: hidden;
+    flex: 1;
+    min-width: 120px;
+  }
+  .dette-bar {
+    height: 100%;
+    border-radius: 20px;
+    background: var(--danger);
+    transition: width 0.5s ease;
+  }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 20px 0;
+  }
+
+  /* TOTAL ROW */
+  .total-row td {
+    font-weight: 500;
+    color: var(--text);
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+  }
+
+  /* MONTH SELECTOR */
+  .month-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .month-display {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    color: var(--accent);
+    min-width: 120px;
+    text-align: center;
+    font-weight: 400;
+  }
+
+  /* ADD ROW FORM */
+  .add-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 12px;
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    margin-top: 12px;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--surface3);
+    color: var(--accent);
+    border: 1px solid var(--border);
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    z-index: 999;
+    transition: transform 0.3s ease;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ICONS */
+  .icon { font-style: normal; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">mon<span>budget</span></div>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <button class="btn btn-ghost" onclick="exportData()" style="font-size:0.65rem;padding:6px 12px;">&#x2B06; Exporter</button>
+    <button class="btn btn-ghost" onclick="document.getElementById('import-input').click()" style="font-size:0.65rem;padding:6px 12px;">&#x2B07; Importer</button>
+    <input type="file" id="import-input" accept=".json" style="display:none;" onchange="importData(event)">
+    <div class="date-display" style="margin-left:8px;">
+      <div id="current-date"></div>
+      <div style="color: var(--accent); font-size:0.7rem;">v2025</div>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="tab active" onclick="showPage('overview', this)">🏠 Vue globale</div>
+  <div class="tab" onclick="showPage('depenses-auto', this)">🔄 Dépenses auto</div>
+  <div class="tab" onclick="showPage('dettes', this)">💳 Dettes</div>
+  <div class="tab" onclick="showPage('epargne', this)">🎯 Épargnes</div>
+  <div class="tab" onclick="showPage('voiture', this)">🚗 Voiture</div>
+  <div class="tab" onclick="showPage('plaisir', this)">🎉 Plaisir</div>
+</nav>
+
+<!-- ===================== PAGE: VUE GLOBALE ===================== -->
+<div class="page active" id="page-overview">
+  <div class="section-title">Vue d'ensemble</div>
+  <div class="section-sub">Budget global mensuel — mis à jour en temps réel</div>
+
+  <!-- SALAIRE INPUT -->
+  <div class="card" style="border-color: var(--accent); margin-bottom: 24px;">
+    <div class="card-title"><span class="dot" style="background:var(--accent)"></span>Salaire mensuel net</div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <input type="number" id="salaire" value="2000" min="0" step="50" oninput="recalcAll()" style="width:140px; font-size:1.1rem; padding:10px 14px;">
+      <span style="font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--muted)">€ / mois</span>
+    </div>
+  </div>
+
+  <!-- SUMMARY GRID -->
+  <div class="grid-3" style="margin-bottom:16px;">
+    <div class="sum-card">
+      <div class="sum-label">💶 Salaire</div>
+      <div class="sum-value pos" id="ov-salaire">0 €</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-label">🔄 Dépenses auto</div>
+      <div class="sum-value neg" id="ov-auto">0 €</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-label">💳 Dettes (mensuel)</div>
+      <div class="sum-value neg" id="ov-dettes">0 €</div>
+    </div>
+  </div>
+  <div class="grid-3" style="margin-bottom:16px;">
+    <div class="sum-card">
+      <div class="sum-label">🎯 Épargnes (total)</div>
+      <div class="sum-value warn" id="ov-epargne">0 €</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-label">🚗 Voiture</div>
+      <div class="sum-value" style="color:var(--purple)" id="ov-voiture">0 €</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-label">🎉 Plaisir (calculé)</div>
+      <div class="sum-value" style="color:var(--orange)" id="ov-plaisir">0 €</div>
+    </div>
+  </div>
+
+  <!-- RESTE -->
+  <div class="card" style="border-color: var(--accent2);">
+    <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>Reste disponible</div>
+    <div style="font-family:'Lora',serif; font-size:2.4rem;" id="ov-reste">0 €</div>
+    <div style="font-size:0.75rem; color:var(--muted); margin-top:6px;">Salaire − dépenses auto − dettes − épargnes − voiture</div>
+  </div>
+
+  <!-- RÉPARTITION VISUELLE -->
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:var(--info)"></span>Répartition du salaire</div>
+    <div id="repartition-bars"></div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: DÉPENSES AUTO ===================== -->
+<div class="page" id="page-depenses-auto">
+  <div class="month-nav">
+    <button class="btn btn-ghost" onclick="changeMonth(-1)">←</button>
+    <div class="month-display" id="month-display">Mai 2025</div>
+    <button class="btn btn-ghost" onclick="changeMonth(1)">→</button>
+  </div>
+  <div class="section-title">Dépenses automatiques</div>
+  <div class="section-sub">Prélèvements et abonnements mensuels fixes</div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:var(--info)"></span>Mes abonnements & prélèvements</div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:30px"></th>
+          <th>Libellé</th>
+          <th>Catégorie</th>
+          <th>Montant</th>
+          <th>Date prélévement</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="auto-table-body"></tbody>
+      <tfoot>
+        <tr class="total-row">
+          <td colspan="3"><strong>TOTAL</strong></td>
+          <td id="auto-total" class="amount neg">0 €</td>
+          <td colspan="2"></td>
+        </tr>
+        <tr>
+          <td colspan="3" style="font-size:0.75rem;color:var(--accent2);padding:6px 12px;">✓ Prélevé ce mois</td>
+          <td id="auto-paye" style="font-size:0.75rem;color:var(--accent2);padding:6px 12px;">0 €</td>
+          <td colspan="2"></td>
+        </tr>
+        <tr>
+          <td colspan="3" style="font-size:0.75rem;color:var(--accent);padding:6px 12px;">⏳ Reste à prélever</td>
+          <td id="auto-reste" style="font-size:0.75rem;color:var(--accent);padding:6px 12px;">0 €</td>
+          <td colspan="2"></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <!-- FORM ADD -->
+    <div class="add-row">
+      <input type="text" id="new-auto-label" placeholder="Ex : Netflix…" style="width:160px;">
+      <select id="new-auto-cat" style="width:140px;">
+        <option value="abonnement">Abonnement</option>
+        <option value="loyer">Loyer / charges</option>
+        <option value="assurance">Assurance</option>
+        <option value="paypal">PayPal x4</option>
+        <option value="telecom">Télécom</option>
+        <option value="banque">Frais bancaires</option>
+        <option value="autre">Autre</option>
+      </select>
+      <input type="number" id="new-auto-amount" placeholder="€" min="0" step="0.01" style="width:90px;">
+      <input type="text" id="new-auto-date" placeholder="Ex: 5" style="width:60px;" maxlength="2">
+      <button class="btn btn-accent" onclick="addAutoDepense()">+ Ajouter</button>
+    </div>
+  </div>
+
+  <!-- PAYPAL x4 SECTION -->
+  <div class="card" style="border-color: #5ba8f5;">
+    <div class="card-title"><span class="dot" style="background:#5ba8f5"></span>PayPal paiements en 4×</div>
+    <p style="font-size:0.78rem; color:var(--muted); margin-bottom:14px;">Chaque achat en 4× est divisé en mensualités automatiques.</p>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:30px"></th>
+          <th>Article</th>
+          <th>Montant total</th>
+          <th>Mensualité</th>
+          <th>Mois restants</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="paypal-table-body"></tbody>
+      <tfoot>
+        <tr class="total-row">
+          <td colspan="3"><strong>TOTAL MENSUEL</strong></td>
+          <td id="paypal-total" class="amount neg">0 €</td>
+          <td colspan="2"></td>
+        </tr>
+        <tr>
+          <td colspan="3" style="font-size:0.75rem;color:var(--accent2);padding:6px 12px;">✓ Prélevé ce mois</td>
+          <td id="paypal-paye" style="font-size:0.75rem;color:var(--accent2);padding:6px 12px;">0 €</td>
+          <td colspan="2"></td>
+        </tr>
+        <tr>
+          <td colspan="3" style="font-size:0.75rem;color:var(--accent);padding:6px 12px;">⏳ Reste à prélever</td>
+          <td id="paypal-reste" style="font-size:0.75rem;color:var(--accent);padding:6px 12px;">0 €</td>
+          <td colspan="2"></td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="add-row">
+      <input type="text" id="new-pp-label" placeholder="Ex : Gopro…" style="width:150px;">
+      <input type="number" id="new-pp-total" placeholder="Total €" min="0" step="0.01" style="width:90px;">
+      <input type="number" id="new-pp-months" placeholder="Mois restants" min="1" max="4" value="4" style="width:100px;">
+      <button class="btn btn-accent" onclick="addPaypal()">+ Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: DETTES ===================== -->
+<div class="page" id="page-dettes">
+  <div class="section-title">Dettes</div>
+  <div class="section-sub">Suivi de tes dettes — réduis-les manuellement chaque mois</div>
+
+  <div id="dettes-list"></div>
+
+  <!-- ADD DETTE -->
+  <div class="card" style="border-style: dashed;">
+    <div class="card-title"><span class="dot" style="background:var(--danger)"></span>Ajouter une dette</div>
+    <div class="add-row">
+      <input type="text" id="new-dette-label" placeholder="Ex : Crédit voiture" style="width:180px;">
+      <input type="number" id="new-dette-total" placeholder="Montant total €" min="0" step="1" style="width:130px;">
+      <input type="number" id="new-dette-mensuel" placeholder="Mensualité €" min="0" step="1" style="width:110px;">
+      <button class="btn btn-accent" onclick="addDette()">+ Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: ÉPARGNE ===================== -->
+<div class="page" id="page-epargne">
+  <div class="section-title">Mes objectifs d'épargne</div>
+  <div class="section-sub">Suis ta progression vers chaque objectif</div>
+
+  <!-- VOYAGE / RANDO -->
+  <div class="card" id="epargne-voyage-card">
+    <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>🏔️ Économies Voyage / Rando
+      <button class="btn btn-danger" onclick="deleteEpargne('voyage')" style="margin-left:auto;font-size:0.6rem;padding:4px 8px;">Supprimer</button>
+    </div>
+    <div class="grid-2">
+      <div>
+        <div class="sum-label">Objectif</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="number" id="voyage-objectif" value="3000" min="0" step="100" oninput="updateEpargne('voyage')" style="width:110px;">
+          <span style="color:var(--muted)">€</span>
+        </div>
+      </div>
+      <div>
+        <div class="sum-label">Épargne mensuelle</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="number" id="voyage-mensuel" value="100" min="0" step="10" oninput="updateEpargne('voyage'); recalcAll()" style="width:90px;">
+          <span style="color:var(--muted)">€/mois</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:16px;">
+      <div class="progress-label">
+        <span>Accumulé</span>
+        <span id="voyage-pct-label">0%</span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-bar" id="voyage-bar" style="width:0%;background:var(--accent2)"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px;">
+          <div class="progress-pct" id="voyage-accumulated">0 €</div>
+        <div style="font-size:0.75rem;color:var(--muted);margin-top:6px;" id="voyage-objectif-display">/ 3000 €</div>
+      </div>
+    </div>
+    <div class="epargne-row">
+      <input type="number" id="voyage-add-input" placeholder="Ajouter €" min="0" step="10" style="width:100px;">
+      <button class="btn btn-accent" onclick="addToEpargne('voyage')">+ Déposer</button>
+      <button class="btn btn-ghost" onclick="resetEpargne('voyage')" style="font-size:0.65rem;">Réinitialiser</button>
+    </div>
+    <div style="margin-top:10px;font-size:0.72rem;color:var(--muted);" id="voyage-months-left"></div>
+  </div>
+
+  <!-- PVT CANADA -->
+  <div class="card" id="epargne-pvt-card">
+    <div class="card-title"><span class="dot" style="background:var(--accent)"></span>🍁 Épargne PVT Canada
+      <button class="btn btn-danger" onclick="deleteEpargne('pvt')" style="margin-left:auto;font-size:0.6rem;padding:4px 8px;">Supprimer</button>
+    </div>
+    <div class="grid-2">
+      <div>
+        <div class="sum-label">Objectif</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="number" id="pvt-objectif" value="10000" min="0" step="100" oninput="updateEpargne('pvt')" style="width:110px;">
+          <span style="color:var(--muted)">€</span>
+        </div>
+      </div>
+      <div>
+        <div class="sum-label">Épargne mensuelle</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="number" id="pvt-mensuel" value="200" min="0" step="10" oninput="updateEpargne('pvt'); recalcAll()" style="width:90px;">
+          <span style="color:var(--muted)">€/mois</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:16px;">
+      <div class="progress-label">
+        <span>Accumulé</span>
+        <span id="pvt-pct-label">0%</span>
+      </div>
+      <div class="progress-wrap" style="height:18px;">
+        <div class="progress-bar" id="pvt-bar" style="width:0%;background:linear-gradient(90deg,var(--accent),var(--orange))"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px;">
+        <div class="progress-pct" id="pvt-accumulated">0 €</div>
+        <div style="font-size:0.75rem;color:var(--muted);margin-top:6px;" id="pvt-objectif-display">/ 10000 €</div>
+      </div>
+    </div>
+    <div class="epargne-row">
+      <input type="number" id="pvt-add-input" placeholder="Ajouter €" min="0" step="10" style="width:100px;">
+      <button class="btn btn-accent" onclick="addToEpargne('pvt')">+ Déposer</button>
+      <button class="btn btn-ghost" onclick="resetEpargne('pvt')" style="font-size:0.65rem;">Réinitialiser</button>
+    </div>
+    <div style="margin-top:10px;font-size:0.72rem;color:var(--muted);" id="pvt-months-left"></div>
+  </div>
+
+  <!-- CRÉDIT PHOTO -->
+  <div class="card" id="epargne-photo-card">
+    <div class="card-title"><span class="dot" style="background:var(--purple)"></span>📷 Solder crédit photo
+      <button class="btn btn-danger" onclick="deleteEpargne('photo')" style="margin-left:auto;font-size:0.6rem;padding:4px 8px;">Supprimer</button>
+    </div>
+    <div class="grid-2">
+      <div>
+        <div class="sum-label">Montant restant dû</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="number" id="photo-objectif" value="1500" min="0" step="50" oninput="updateEpargne('photo')" style="width:110px;">
+          <span style="color:var(--muted)">€</span>
+        </div>
+      </div>
+      <div>
+        <div class="sum-label">Versement mensuel</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="number" id="photo-mensuel" value="50" min="0" step="10" oninput="updateEpargne('photo'); recalcAll()" style="width:90px;">
+          <span style="color:var(--muted)">€/mois</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:16px;">
+      <div class="progress-label">
+        <span>Déjà remboursé</span>
+        <span id="photo-pct-label">0%</span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-bar" id="photo-bar" style="width:0%;background:var(--purple)"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px;">
+        <div class="progress-pct" id="photo-accumulated">0 €</div>
+        <div style="font-size:0.75rem;color:var(--muted);margin-top:6px;" id="photo-objectif-display">/ 1500 €</div>
+      </div>
+    </div>
+    <div class="epargne-row">
+      <input type="number" id="photo-add-input" placeholder="Ajouter €" min="0" step="10" style="width:100px;">
+      <button class="btn btn-accent" onclick="addToEpargne('photo')">+ Verser</button>
+      <button class="btn btn-ghost" onclick="resetEpargne('photo')" style="font-size:0.65rem;">Réinitialiser</button>
+    </div>
+    <div style="margin-top:10px;font-size:0.72rem;color:var(--muted);" id="photo-months-left"></div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: VOITURE ===================== -->
+<div class="page" id="page-voiture">
+  <div class="section-title">Budget Voiture</div>
+  <div class="section-sub">Entretien, réparations & modifications</div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:var(--purple)"></span>Budget mensuel alloué à la voiture</div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
+      <input type="number" id="voiture-budget" value="100" min="0" step="10" oninput="recalcAll()" style="width:120px; font-size:1.1rem;">
+      <span style="color:var(--muted)">€ / mois</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:var(--purple)"></span>Historique des dépenses voiture</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Type</th>
+          <th>Montant</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="voiture-table-body"></tbody>
+      <tfoot>
+        <tr class="total-row">
+          <td colspan="3"><strong>TOTAL DÉPENSÉ</strong></td>
+          <td id="voiture-total" class="amount neg">0 €</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="add-row">
+      <input type="date" id="new-voiture-date" style="width:140px;">
+      <input type="text" id="new-voiture-label" placeholder="Ex: Vidange…" style="width:160px;">
+      <select id="new-voiture-type" style="width:130px;">
+        <option value="entretien">Entretien</option>
+        <option value="reparation">Réparation</option>
+        <option value="modification">Modification</option>
+        <option value="carburant">Carburant</option>
+        <option value="assurance">Assurance</option>
+      </select>
+      <input type="number" id="new-voiture-amount" placeholder="€" min="0" step="0.01" style="width:90px;">
+      <button class="btn btn-accent" onclick="addVoiture()">+ Ajouter</button>
+    </div>
+  </div>
+
+  <!-- SOLDE -->
+  <div class="card" style="border-color:var(--purple)">
+    <div class="card-title"><span class="dot" style="background:var(--purple)"></span>Solde voiture</div>
+    <div style="display:flex;gap:24px;flex-wrap:wrap;">
+      <div>
+        <div class="sum-label">Budget alloué (cumulé)</div>
+        <div class="sum-value" style="color:var(--purple)" id="voiture-alloue">0 €</div>
+      </div>
+      <div>
+        <div class="sum-label">Dépensé</div>
+        <div class="sum-value neg" id="voiture-depense">0 €</div>
+      </div>
+      <div>
+        <div class="sum-label">Disponible</div>
+        <div class="sum-value pos" id="voiture-dispo">0 €</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: PLAISIR ===================== -->
+<div class="page" id="page-plaisir">
+  <div class="section-title">Dépenses Plaisir</div>
+  <div class="section-sub">Ce qui reste après tout → c'est ton budget plaisir</div>
+
+  <div class="card" style="border-color:var(--orange)">
+    <div class="card-title"><span class="dot" style="background:var(--orange)"></span>Budget plaisir calculé automatiquement</div>
+    <div style="font-family:'Lora',serif; font-size:2rem; color:var(--orange);" id="plaisir-montant">0 €</div>
+    <div style="font-size:0.75rem;color:var(--muted);margin-top:6px;">Salaire − dépenses auto − dettes − épargnes − voiture</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:var(--orange)"></span>Journal de mes dépenses plaisir</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Catégorie</th>
+          <th>Montant</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="plaisir-table-body"></tbody>
+      <tfoot>
+        <tr class="total-row">
+          <td colspan="3"><strong>DÉPENSÉ CE MOIS</strong></td>
+          <td id="plaisir-total" class="amount neg">0 €</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="add-row">
+      <input type="date" id="new-plaisir-date" style="width:140px;">
+      <input type="text" id="new-plaisir-label" placeholder="Ex: Restaurant…" style="width:160px;">
+      <select id="new-plaisir-cat" style="width:140px;">
+        <option value="resto">Restaurant</option>
+        <option value="sortie">Sortie / Loisirs</option>
+        <option value="shopping">Shopping</option>
+        <option value="tech">Tech / Gadgets</option>
+        <option value="sport">Sport / Outdoor</option>
+        <option value="autre">Autre</option>
+      </select>
+      <input type="number" id="new-plaisir-amount" placeholder="€" min="0" step="0.01" style="width:90px;">
+      <button class="btn btn-accent" onclick="addPlaisir()">+ Ajouter</button>
+    </div>
+  </div>
+
+  <!-- RESTE PLAISIR -->
+  <div class="card" style="border-color:var(--accent2)">
+    <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>Reste à dépenser ce mois</div>
+    <div style="font-family:'Lora',serif; font-size:2rem;" id="plaisir-reste">0 €</div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DATA STORE =====
+let data = JSON.parse(localStorage.getItem('budget_data') || 'null') || {
+  salaire: 2000,
+  autoDepenses: [
+    { id: 1, label: 'Loyer / charges', cat: 'loyer', amount: 650, date: '1' },
+    { id: 2, label: 'EDF / électricité', cat: 'abonnement', amount: 60, date: '5' },
+    { id: 3, label: 'Mutuelle', cat: 'assurance', amount: 45, date: '3' },
+    { id: 4, label: 'Spotify', cat: 'abonnement', amount: 9.99, date: '15' },
+    { id: 5, label: 'Forfait mobile', cat: 'telecom', amount: 20, date: '10' },
+  ],
+  paypalItems: [],
+  dettes: [
+    { id: 1, label: 'Crédit voiture', total: 4000, restant: 3200, mensuel: 150 },
+  ],
+  epargnes: {
+    voyage: { objectif: 3000, mensuel: 100, accumulated: 0 },
+    pvt: { objectif: 10000, mensuel: 200, accumulated: 0 },
+    photo: { objectif: 1500, mensuel: 50, accumulated: 0 },
+  },
+  voitureBudget: 100,
+  voitureDepenses: [],
+  plaisirDepenses: [],
+  currentMonth: new Date().getMonth(),
+  currentYear: new Date().getFullYear(),
+};
+
+let nextId = 100;
+function save() { localStorage.setItem('budget_data', JSON.stringify(data)); }
+function fmt(n) { return (Math.round(n*100)/100).toLocaleString('fr-FR', {minimumFractionDigits:2,maximumFractionDigits:2}) + ' €'; }
+
+// ===== DATE =====
+const months = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+function updateDateDisplay() {
+  document.getElementById('current-date').textContent = new Date().toLocaleDateString('fr-FR', {weekday:'short', day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('month-display').textContent = months[data.currentMonth] + ' ' + data.currentYear;
+}
+function changeMonth(d) {
+  data.currentMonth += d;
+  if (data.currentMonth > 11) { data.currentMonth = 0; data.currentYear++; }
+  if (data.currentMonth < 0) { data.currentMonth = 11; data.currentYear--; }
+  // Reset toutes les coches pour le nouveau mois
+  data.autoDepenses.forEach(x => x.checked = false);
+  data.paypalItems.forEach(x => x.checked = false);
+  save(); updateDateDisplay(); renderAutoTable();
+  toast('Nouveau mois — coches réinitialisées');
+}
+
+// ===== TABS =====
+function showPage(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  el.classList.add('active');
+}
+
+// ===== TOAST =====
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ===== AUTO DEPENSES =====
+const catLabels = { abonnement: '📱 Abonnement', loyer: '🏠 Loyer/Charges', assurance: '🛡 Assurance', paypal: '🔵 PayPal x4', telecom: '📡 Télécom', banque: '🏦 Banque', autre: '📦 Autre' };
+
+function renderAutoTable() {
+  const tbody = document.getElementById('auto-table-body');
+  tbody.innerHTML = '';
+  let total = 0;
+  let paye = 0;
+  data.autoDepenses.forEach(item => {
+    total += item.amount;
+    if (item.checked) paye += item.amount;
+    const tr = document.createElement('tr');
+    tr.style.opacity = item.checked ? '0.45' : '1';
+    tr.innerHTML = `
+      <td>
+        <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleAuto(${item.id})" style="width:16px;height:16px;cursor:pointer;accent-color:var(--accent2);">
+      </td>
+      <td style="${item.checked ? 'text-decoration:line-through;color:var(--muted)' : ''}">${item.label}</td>
+      <td><span class="badge badge-auto">${catLabels[item.cat] || item.cat}</span></td>
+      <td class="amount ${item.checked ? '' : 'neg'}">${fmt(item.amount)}</td>
+      <td style="color:var(--muted)">le ${item.date || '—'}</td>
+      <td><button class="btn btn-danger" onclick="removeAuto(${item.id})">✕</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('auto-total').textContent = fmt(total);
+  document.getElementById('auto-paye').textContent = fmt(paye);
+  document.getElementById('auto-reste').textContent = fmt(total - paye);
+  renderPaypalTable();
+}
+
+function addAutoDepense() {
+  const label = document.getElementById('new-auto-label').value.trim();
+  const cat = document.getElementById('new-auto-cat').value;
+  const amount = parseFloat(document.getElementById('new-auto-amount').value);
+  const date = document.getElementById('new-auto-date').value.trim();
+  if (!label || isNaN(amount) || amount <= 0) return toast('Remplis le libellé et le montant !');
+  data.autoDepenses.push({ id: nextId++, label, cat, amount, date });
+  save(); renderAutoTable(); recalcAll();
+  document.getElementById('new-auto-label').value = '';
+  document.getElementById('new-auto-amount').value = '';
+  document.getElementById('new-auto-date').value = '';
+  toast('Dépense ajoutée ✓');
+}
+
+function removeAuto(id) {
+  data.autoDepenses = data.autoDepenses.filter(x => x.id !== id);
+  save(); renderAutoTable(); recalcAll();
+}
+
+function toggleAuto(id) {
+  const item = data.autoDepenses.find(x => x.id === id);
+  if (item) { item.checked = !item.checked; save(); renderAutoTable(); }
+}
+
+// ===== PAYPAL =====
+function renderPaypalTable() {
+  const tbody = document.getElementById('paypal-table-body');
+  tbody.innerHTML = '';
+  let total = 0;
+  let paye = 0;
+  data.paypalItems.forEach(pp => {
+    const mensuel = pp.total / 4;
+    total += mensuel;
+    if (pp.checked) paye += mensuel;
+    const tr = document.createElement('tr');
+    tr.style.opacity = pp.checked ? '0.45' : '1';
+    tr.innerHTML = `
+      <td>
+        <input type="checkbox" ${pp.checked ? 'checked' : ''} onchange="togglePaypal(${pp.id})" style="width:16px;height:16px;cursor:pointer;accent-color:var(--accent2);">
+      </td>
+      <td style="${pp.checked ? 'text-decoration:line-through;color:var(--muted)' : ''}">${pp.label}</td>
+      <td class="amount">${fmt(pp.total)}</td>
+      <td class="amount ${pp.checked ? '' : 'neg'}">${fmt(mensuel)}/mois</td>
+      <td>${pp.months} mois restants</td>
+      <td><button class="btn btn-danger" onclick="removePaypal(${pp.id})">✕</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('paypal-total').textContent = fmt(total);
+  document.getElementById('paypal-paye').textContent = fmt(paye);
+  document.getElementById('paypal-reste').textContent = fmt(total - paye);
+}
+
+function togglePaypal(id) {
+  const item = data.paypalItems.find(x => x.id === id);
+  if (item) { item.checked = !item.checked; save(); renderPaypalTable(); }
+}
+
+function addPaypal() {
+  const label = document.getElementById('new-pp-label').value.trim();
+  const total = parseFloat(document.getElementById('new-pp-total').value);
+  const months = parseInt(document.getElementById('new-pp-months').value);
+  if (!label || isNaN(total) || total <= 0) return toast('Remplis les champs !');
+  data.paypalItems.push({ id: nextId++, label, total, months });
+  save(); renderPaypalTable(); recalcAll();
+  document.getElementById('new-pp-label').value = '';
+  document.getElementById('new-pp-total').value = '';
+  document.getElementById('new-pp-months').value = '4';
+  toast('PayPal x4 ajouté ✓');
+}
+
+function removePaypal(id) {
+  data.paypalItems = data.paypalItems.filter(x => x.id !== id);
+  save(); renderPaypalTable(); recalcAll();
+}
+
+// ===== DETTES =====
+function renderDettes() {
+  const container = document.getElementById('dettes-list');
+  container.innerHTML = '';
+  data.dettes.forEach(dette => {
+    const pct = Math.max(0, Math.min(100, ((dette.total - dette.restant) / dette.total) * 100));
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.borderColor = 'rgba(240,90,126,0.3)';
+    card.innerHTML = `
+      <div class="card-title"><span class="dot" style="background:var(--danger)"></span>${dette.label}</div>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:14px;">
+        <div><div class="sum-label">Total initial</div><div style="font-size:1.1rem;font-family:'DM Serif Display',serif">${fmt(dette.total)}</div></div>
+        <div><div class="sum-label">Restant dû</div><div class="sum-value neg" style="font-size:1.4rem">${fmt(dette.restant)}</div></div>
+        <div><div class="sum-label">Mensualité</div><div style="font-size:1.1rem;color:var(--danger)">${fmt(dette.mensuel)}/mois</div></div>
+      </div>
+      <div class="progress-label"><span>Remboursé</span><span>${Math.round(pct)}%</span></div>
+      <div class="progress-wrap"><div class="progress-bar" style="width:${pct}%;background:linear-gradient(90deg,var(--danger),var(--orange))"></div></div>
+      <div class="progress-pct" style="margin-top:4px;">${fmt(dette.total - dette.restant)} remboursé</div>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:14px;flex-wrap:wrap;">
+        <input type="number" id="reduce-${dette.id}" placeholder="Réduire de €" min="0" step="1" style="width:130px;">
+        <button class="btn btn-accent" onclick="reduceDette(${dette.id})">Rembourser</button>
+        <button class="btn btn-danger" onclick="removeDette(${dette.id})">Supprimer</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function addDette() {
+  const label = document.getElementById('new-dette-label').value.trim();
+  const total = parseFloat(document.getElementById('new-dette-total').value);
+  const mensuel = parseFloat(document.getElementById('new-dette-mensuel').value);
+  if (!label || isNaN(total) || total <= 0) return toast('Remplis les champs !');
+  data.dettes.push({ id: nextId++, label, total, restant: total, mensuel: mensuel || 0 });
+  save(); renderDettes(); recalcAll();
+  document.getElementById('new-dette-label').value = '';
+  document.getElementById('new-dette-total').value = '';
+  document.getElementById('new-dette-mensuel').value = '';
+  toast('Dette ajoutée ✓');
+}
+
+function reduceDette(id) {
+  const input = document.getElementById('reduce-'+id);
+  const amount = parseFloat(input.value);
+  if (isNaN(amount) || amount <= 0) return toast('Montant invalide');
+  const dette = data.dettes.find(d => d.id === id);
+  if (dette) {
+    dette.restant = Math.max(0, dette.restant - amount);
+    save(); renderDettes(); recalcAll();
+    toast(`${fmt(amount)} remboursé ✓`);
+  }
+  input.value = '';
+}
+
+function removeDette(id) {
+  data.dettes = data.dettes.filter(d => d.id !== id);
+  save(); renderDettes(); recalcAll();
+}
+
+// ===== ÉPARGNE =====
+const epargneColors = { voyage: 'var(--accent2)', pvt: 'var(--accent)', photo: 'var(--purple)' };
+
+function updateEpargne(key) {
+  const e = data.epargnes[key];
+  e.objectif = parseFloat(document.getElementById(key+'-objectif').value) || 0;
+  e.mensuel = parseFloat(document.getElementById(key+'-mensuel').value) || 0;
+  const pct = e.objectif > 0 ? Math.min(100, (e.accumulated / e.objectif) * 100) : 0;
+  document.getElementById(key+'-bar').style.width = pct + '%';
+  document.getElementById(key+'-pct-label').textContent = Math.round(pct) + '%';
+  document.getElementById(key+'-accumulated').textContent = fmt(e.accumulated);
+  document.getElementById(key+'-objectif-display').textContent = '/ ' + fmt(e.objectif);
+  if (e.mensuel > 0 && e.objectif > e.accumulated) {
+    const monthsLeft = Math.ceil((e.objectif - e.accumulated) / e.mensuel);
+    document.getElementById(key+'-months-left').textContent = `À ce rythme : objectif atteint en ~${monthsLeft} mois`;
+  } else if (e.accumulated >= e.objectif && e.objectif > 0) {
+    document.getElementById(key+'-months-left').textContent = '🎉 Objectif atteint !';
+  } else {
+    document.getElementById(key+'-months-left').textContent = '';
+  }
+  save();
+}
+
+function addToEpargne(key) {
+  const input = document.getElementById(key+'-add-input');
+  const amount = parseFloat(input.value);
+  if (isNaN(amount) || amount <= 0) return toast('Montant invalide');
+  data.epargnes[key].accumulated += amount;
+  save(); updateEpargne(key); recalcAll();
+  toast(`+${fmt(amount)} ajouté ✓`);
+  input.value = '';
+}
+
+function deleteEpargne(key) {
+  if (confirm('Supprimer cette épargne ? Les données seront perdues.')) {
+    data.epargnes[key] = { objectif: 0, mensuel: 0, accumulated: 0 };
+    document.getElementById('epargne-'+key+'-card').style.display = 'none';
+    save(); recalcAll();
+    toast('Épargne supprimée');
+  }
+}
+
+function resetEpargne(key) {
+  if (confirm('Réinitialiser cette épargne ?')) {
+    data.epargnes[key].accumulated = 0;
+    save(); updateEpargne(key); recalcAll();
+  }
+}
+
+function initEpargnes() {
+  ['voyage','pvt','photo'].forEach(key => {
+    const e = data.epargnes[key];
+    document.getElementById(key+'-objectif').value = e.objectif;
+    document.getElementById(key+'-mensuel').value = e.mensuel;
+    updateEpargne(key);
+  });
+}
+
+// ===== VOITURE =====
+const voitureTypes = { entretien: '🔧 Entretien', reparation: '🛠 Réparation', modification: '⚡ Modification', carburant: '⛽ Carburant', assurance: '🛡 Assurance' };
+
+function renderVoiture() {
+  const tbody = document.getElementById('voiture-table-body');
+  tbody.innerHTML = '';
+  let total = 0;
+  data.voitureDepenses.forEach(item => {
+    total += item.amount;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="color:var(--muted)">${item.date || '—'}</td>
+      <td>${item.label}</td>
+      <td><span class="badge" style="background:rgba(180,126,245,0.15);color:var(--purple)">${voitureTypes[item.type] || item.type}</span></td>
+      <td class="amount neg">${fmt(item.amount)}</td>
+      <td><button class="btn btn-danger" onclick="removeVoiture(${item.id})">✕</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('voiture-total').textContent = fmt(total);
+  document.getElementById('voiture-depense').textContent = fmt(total);
+
+  const budget = parseFloat(document.getElementById('voiture-budget').value) || 0;
+  data.voitureBudget = budget;
+  // Cumulé depuis le début (nb de mois × budget)
+  const alloue = budget; // on montre le mensuel pour simplifier
+  document.getElementById('voiture-alloue').textContent = fmt(alloue);
+  document.getElementById('voiture-dispo').textContent = fmt(Math.max(0, alloue - total));
+  save();
+}
+
+function addVoiture() {
+  const date = document.getElementById('new-voiture-date').value;
+  const label = document.getElementById('new-voiture-label').value.trim();
+  const type = document.getElementById('new-voiture-type').value;
+  const amount = parseFloat(document.getElementById('new-voiture-amount').value);
+  if (!label || isNaN(amount) || amount <= 0) return toast('Remplis les champs !');
+  data.voitureDepenses.push({ id: nextId++, date, label, type, amount });
+  save(); renderVoiture(); recalcAll();
+  document.getElementById('new-voiture-label').value = '';
+  document.getElementById('new-voiture-amount').value = '';
+  toast('Dépense voiture ajoutée ✓');
+}
+
+function removeVoiture(id) {
+  data.voitureDepenses = data.voitureDepenses.filter(x => x.id !== id);
+  save(); renderVoiture(); recalcAll();
+}
+
+// ===== PLAISIR =====
+const plaisirCats = { resto: '🍽 Restaurant', sortie: '🎭 Sorties', shopping: '🛍 Shopping', tech: '💻 Tech', sport: '🏃 Sport', autre: '📦 Autre' };
+
+function renderPlaisir(plaisirBudget) {
+  const tbody = document.getElementById('plaisir-table-body');
+  tbody.innerHTML = '';
+  let total = 0;
+  data.plaisirDepenses.forEach(item => {
+    total += item.amount;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="color:var(--muted)">${item.date || '—'}</td>
+      <td>${item.label}</td>
+      <td><span class="badge badge-plaisir">${plaisirCats[item.cat] || item.cat}</span></td>
+      <td class="amount neg">${fmt(item.amount)}</td>
+      <td><button class="btn btn-danger" onclick="removePlaisir(${item.id})">✕</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('plaisir-total').textContent = fmt(total);
+  const reste = Math.max(0, plaisirBudget - total);
+  document.getElementById('plaisir-reste').textContent = fmt(reste);
+  document.getElementById('plaisir-reste').className = reste < plaisirBudget * 0.2 ? 'sum-value neg' : 'sum-value pos';
+}
+
+function addPlaisir() {
+  const date = document.getElementById('new-plaisir-date').value;
+  const label = document.getElementById('new-plaisir-label').value.trim();
+  const cat = document.getElementById('new-plaisir-cat').value;
+  const amount = parseFloat(document.getElementById('new-plaisir-amount').value);
+  if (!label || isNaN(amount) || amount <= 0) return toast('Remplis les champs !');
+  data.plaisirDepenses.push({ id: nextId++, date, label, cat, amount });
+  save(); recalcAll();
+  document.getElementById('new-plaisir-label').value = '';
+  document.getElementById('new-plaisir-amount').value = '';
+  toast('Dépense plaisir ajoutée ✓');
+}
+
+function removePlaisir(id) {
+  data.plaisirDepenses = data.plaisirDepenses.filter(x => x.id !== id);
+  save(); recalcAll();
+}
+
+// ===== RECALC ALL =====
+function recalcAll() {
+  const salaire = parseFloat(document.getElementById('salaire').value) || 0;
+  data.salaire = salaire;
+
+  // Auto total
+  let autoTotal = data.autoDepenses.reduce((s, x) => s + x.amount, 0);
+  let ppTotal = data.paypalItems.reduce((s, x) => s + (x.total / 4), 0);
+  autoTotal += ppTotal;
+
+  // Dettes mensuel total
+  const dettesTotal = data.dettes.reduce((s, d) => s + (d.mensuel || 0), 0);
+
+  // Épargnes mensuel total
+  const epargneTotal = (data.epargnes.voyage.mensuel || 0) + (data.epargnes.pvt.mensuel || 0) + (data.epargnes.photo.mensuel || 0);
+
+  // Voiture
+  const voitureTotal = parseFloat(document.getElementById('voiture-budget').value) || 0;
+  data.voitureBudget = voitureTotal;
+
+  // Reste = plaisir
+  const plaisirBudget = Math.max(0, salaire - autoTotal - dettesTotal - epargneTotal - voitureTotal);
+
+  // Update overview
+  document.getElementById('ov-salaire').textContent = fmt(salaire);
+  document.getElementById('ov-auto').textContent = '−' + fmt(autoTotal);
+  document.getElementById('ov-dettes').textContent = '−' + fmt(dettesTotal);
+  document.getElementById('ov-epargne').textContent = '−' + fmt(epargneTotal);
+  document.getElementById('ov-voiture').textContent = '−' + fmt(voitureTotal);
+  document.getElementById('ov-plaisir').textContent = fmt(plaisirBudget);
+
+  const reste = salaire - autoTotal - dettesTotal - epargneTotal - voitureTotal;
+  const resteEl = document.getElementById('ov-reste');
+  resteEl.textContent = fmt(reste);
+  resteEl.className = reste < 0 ? 'sum-value neg' : reste < 100 ? 'sum-value warn' : 'sum-value pos';
+
+  document.getElementById('plaisir-montant').textContent = fmt(plaisirBudget);
+  renderPlaisir(plaisirBudget);
+
+  // Répartition bars
+  if (salaire > 0) {
+    const bars = [
+      { label: '🔄 Dépenses auto', val: autoTotal, color: 'var(--info)' },
+      { label: '💳 Dettes', val: dettesTotal, color: 'var(--danger)' },
+      { label: '🎯 Épargnes', val: epargneTotal, color: 'var(--accent)' },
+      { label: '🚗 Voiture', val: voitureTotal, color: 'var(--purple)' },
+      { label: '🎉 Plaisir', val: plaisirBudget, color: 'var(--orange)' },
+    ];
+    const container = document.getElementById('repartition-bars');
+    container.innerHTML = bars.map(b => {
+      const pct = Math.min(100, (b.val / salaire) * 100);
+      return `
+        <div style="margin-bottom:12px;">
+          <div class="progress-label"><span>${b.label}</span><span style="color:${b.color}">${fmt(b.val)} (${Math.round(pct)}%)</span></div>
+          <div class="progress-wrap" style="height:10px;">
+            <div class="progress-bar" style="width:${pct}%;background:${b.color}"></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  renderVoiture();
+  save();
+}
+
+// ===== EXPORT / IMPORT =====
+function exportData() {
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const date = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = 'monbudget-' + date + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Données exportées ✓');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (!imported.salaire && imported.salaire !== 0) throw new Error('Format invalide');
+      data = imported;
+      save();
+      document.getElementById('salaire').value = data.salaire;
+      document.getElementById('voiture-budget').value = data.voitureBudget;
+      renderAutoTable();
+      renderDettes();
+      initEpargnes();
+      renderVoiture();
+      recalcAll();
+      toast('Données importées ✓');
+    } catch(err) {
+      toast('Fichier invalide !');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+
+function init() {
+  updateDateDisplay();
+  document.getElementById('salaire').value = data.salaire;
+  document.getElementById('voiture-budget').value = data.voitureBudget;
+  renderAutoTable();
+  renderDettes();
+  initEpargnes();
+  renderVoiture();
+  recalcAll();
+
+  // Set today's date in date inputs
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('new-voiture-date').value = today;
+  document.getElementById('new-plaisir-date').value = today;
+}
+
+init();
+</script>
+</body>
+</html>
